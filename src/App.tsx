@@ -13,6 +13,7 @@ import {
   formatCurrency,
   formatEditableNumber,
   formatPercent,
+  getMilitaryTaxValue,
   getRecipientDefinition,
   getScenarioDefinition,
   parseLocalizedNumber,
@@ -49,18 +50,50 @@ function App() {
 
   const selectedRecipient = getRecipientDefinition(recipientType)
   const selectedScenario = getScenarioDefinition(recipientType, scenarioId)
-  const automaticRate = sumRates(settings, selectedScenario.rateKeys)
+  const baseRate = sumRates(settings, selectedScenario.rateKeys)
+  const militaryTaxValue = getMilitaryTaxValue(settings, selectedScenario.militaryTax)
+  const militaryTaxIsPercent = selectedScenario.militaryTax?.mode === 'percent'
+  const automaticRate = militaryTaxIsPercent ? baseRate + militaryTaxValue : baseRate
   const currentRateInput = manualRate ?? formatEditableNumber(automaticRate)
   const amountValue = parseLocalizedNumber(amount)
   const currentRateValue = parseLocalizedNumber(currentRateInput)
-  const { surcharge, total } = calculateTotals(amountValue, currentRateValue)
+  const effectiveBaseRate = militaryTaxIsPercent ? Math.max(currentRateValue - militaryTaxValue, 0) : currentRateValue
+  const militaryTaxAmount =
+    selectedScenario.militaryTax?.mode === 'fixed'
+      ? militaryTaxValue
+      : (amountValue * militaryTaxValue) / 100
+  const { baseTaxAmount, surcharge, total } = calculateTotals(
+    amountValue,
+    effectiveBaseRate,
+    militaryTaxAmount,
+  )
 
-  const formulaLabel = `${formatCurrency(amountValue)} + (${formatCurrency(amountValue)} × ${formatPercent(
-    currentRateValue,
-  )} / 100) = ${formatCurrency(total)}`
-  const explanationLabel = `Податкова надбавка = ${formatCurrency(amountValue)} × ${formatPercent(
-    currentRateValue,
-  )} / 100 = ${formatCurrency(surcharge)}.`
+  const militaryTaxLabel =
+    selectedScenario.militaryTax?.mode === 'fixed'
+      ? `${formatCurrency(militaryTaxValue)} (фіксовано)`
+      : `${formatPercent(militaryTaxValue)} = ${formatCurrency(militaryTaxAmount)}`
+  const militaryTaxDescription =
+    selectedScenario.militaryTax?.mode === 'fixed' ? 'Військовий збір' : 'Військовий збір'
+  const formulaLabel =
+    selectedScenario.militaryTax?.mode === 'fixed'
+      ? `${formatCurrency(amountValue)} + (${formatCurrency(amountValue)} × ${formatPercent(
+          effectiveBaseRate,
+        )} / 100) + ${formatCurrency(militaryTaxValue)} = ${formatCurrency(total)}`
+      : `${formatCurrency(amountValue)} + (${formatCurrency(amountValue)} × ${formatPercent(
+          currentRateValue,
+        )} / 100) = ${formatCurrency(total)}`
+  const explanationLabel =
+    selectedScenario.militaryTax?.mode === 'fixed'
+      ? `Базові податки = ${formatCurrency(amountValue)} × ${formatPercent(
+          effectiveBaseRate,
+        )} / 100 = ${formatCurrency(baseTaxAmount)}. Військовий збір додається окремо як фіксована сума ${formatCurrency(
+          militaryTaxValue,
+        )}.`
+      : `Базові податки = ${formatCurrency(amountValue)} × ${formatPercent(
+          effectiveBaseRate,
+        )} / 100 = ${formatCurrency(baseTaxAmount)}. Військовий збір = ${formatCurrency(
+          amountValue,
+        )} × ${formatPercent(militaryTaxValue)} / 100 = ${formatCurrency(militaryTaxAmount)}.`
 
   function handleRecipientChange(nextRecipientType: RecipientType) {
     const nextRecipient = getRecipientDefinition(nextRecipientType)
@@ -95,6 +128,8 @@ function App() {
       `Тип отримувача: ${selectedRecipient.label}`,
       `Режим: ${selectedScenario.label}`,
       `Ставка: ${formatPercent(currentRateValue)}`,
+      `Базові податки: ${formatCurrency(baseTaxAmount)}`,
+      `Військовий збір: ${militaryTaxLabel}`,
       `Надбавка: ${formatCurrency(surcharge)}`,
       `Фінальна сума: ${formatCurrency(total)}`,
       `Формула: ${formulaLabel}`,
@@ -143,6 +178,9 @@ function App() {
           />
 
           <ResultsCard
+            baseTaxLabel={formatCurrency(baseTaxAmount)}
+            militaryTaxLabel={militaryTaxLabel}
+            militaryTaxDescription={militaryTaxDescription}
             surchargeLabel={formatCurrency(surcharge)}
             totalLabel={formatCurrency(total)}
             formulaLabel={formulaLabel}

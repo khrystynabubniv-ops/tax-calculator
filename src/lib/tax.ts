@@ -1,5 +1,6 @@
 import { defaultTaxSettings, recipientDefinitions } from '../config/tax'
 import type {
+  MilitaryTaxDefinition,
   RateKey,
   RecipientDefinition,
   RecipientType,
@@ -29,6 +30,10 @@ export function formatEditableNumber(value: number) {
   return value.toFixed(2)
 }
 
+export function formatSettingsValue(value: number) {
+  return value.toFixed(2)
+}
+
 export function parseLocalizedNumber(input: string) {
   const normalized = input.replace(/\s/g, '').replace(',', '.')
   const parsed = Number.parseFloat(normalized)
@@ -53,11 +58,25 @@ export function sumRates(settings: TaxSettings, rateKeys: RateKey[]) {
   return rateKeys.reduce((total, rateKey) => total + (settings[rateKey] ?? 0), 0)
 }
 
-export function calculateTotals(amount: number, rate: number) {
-  const surcharge = (amount * rate) / 100
+export function getMilitaryTaxValue(
+  settings: TaxSettings,
+  militaryTax?: MilitaryTaxDefinition,
+) {
+  if (!militaryTax || militaryTax.mode === 'none' || !militaryTax.rateKey) {
+    return 0
+  }
+
+  return settings[militaryTax.rateKey] ?? 0
+}
+
+export function calculateTotals(amount: number, baseRate: number, militaryTaxAmount: number) {
+  const baseTaxAmount = (amount * baseRate) / 100
+  const surcharge = baseTaxAmount + militaryTaxAmount
   const total = amount + surcharge
 
   return {
+    baseTaxAmount,
+    militaryTaxAmount,
     surcharge,
     total,
   }

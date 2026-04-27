@@ -1,6 +1,6 @@
 import type { RateDefinition, RecipientDefinition, TaxSettings } from '../types/tax'
 
-export const TAX_SETTINGS_STORAGE_KEY = 'tax-calculator-settings-v1'
+export const TAX_SETTINGS_STORAGE_KEY = 'tax-calculator-settings-v2'
 
 export const rateDefinitions: RateDefinition[] = [
   {
@@ -8,16 +8,30 @@ export const rateDefinitions: RateDefinition[] = [
     label: 'ФОП 1 група',
     shortLabel: 'ФОП 1 група',
     defaultValue: 0,
-    helperText:
-      'Фіксовані платежі у 2026 році, тому тут варто задати внутрішню effective-надбавку команди.',
+    helperText: 'Внутрішня робоча надбавка без урахування військового збору.',
   },
   {
     key: 'fopGroup2',
     label: 'ФОП 2 група',
     shortLabel: 'ФОП 2 група',
     defaultValue: 0,
-    helperText:
-      'Фіксовані платежі у 2026 році, тому значення зручно використовувати як внутрішню надбавку.',
+    helperText: 'Внутрішня робоча надбавка без урахування військового збору.',
+  },
+  {
+    key: 'militaryFopGroup1',
+    label: 'Військовий збір ФОП 1 група',
+    shortLabel: 'ВЗ ФОП 1',
+    defaultValue: 800,
+    helperText: 'Фіксований військовий збір у гривнях. Значення можна відредагувати вручну.',
+    valueType: 'currency',
+  },
+  {
+    key: 'militaryFopGroup2',
+    label: 'Військовий збір ФОП 2 група',
+    shortLabel: 'ВЗ ФОП 2',
+    defaultValue: 800,
+    helperText: 'Фіксований військовий збір у гривнях. Значення можна відредагувати вручну.',
+    valueType: 'currency',
   },
   {
     key: 'fopGroup3Five',
@@ -34,11 +48,25 @@ export const rateDefinitions: RateDefinition[] = [
     helperText: 'База для режиму 3% плюс окремий компонент ПДВ.',
   },
   {
+    key: 'militaryFopGroup3',
+    label: 'Військовий збір ФОП 3 група',
+    shortLabel: 'ВЗ ФОП 3',
+    defaultValue: 1,
+    helperText: 'Окремий військовий збір 1% від доходу.',
+  },
+  {
     key: 'fopGeneral',
     label: 'ФОП загальна система',
     shortLabel: 'ФОП загальна',
-    defaultValue: 45,
-    helperText: 'ПДФО 18% + військовий збір 5% + ЄСВ 22% як робоча сума для калькулятора.',
+    defaultValue: 40,
+    helperText: 'ПДФО 18% + ЄСВ 22% без військового збору.',
+  },
+  {
+    key: 'militaryFopGeneral',
+    label: 'Військовий збір ФОП загальна система',
+    shortLabel: 'ВЗ ФОП загальна',
+    defaultValue: 5,
+    helperText: 'Окремий військовий збір 5% від доходу.',
   },
   {
     key: 'tovSimplifiedFive',
@@ -79,8 +107,15 @@ export const rateDefinitions: RateDefinition[] = [
     key: 'ngoPayroll',
     label: 'ГО виплати працівникам',
     shortLabel: 'ГО виплати',
-    defaultValue: 45,
-    helperText: 'ПДФО 18% + військовий збір 5% + ЄСВ 22% як спрощена ставка для надбавки.',
+    defaultValue: 40,
+    helperText: 'ПДФО 18% + ЄСВ 22% без військового збору.',
+  },
+  {
+    key: 'militaryNgoPayroll',
+    label: 'Військовий збір ГО виплати працівникам',
+    shortLabel: 'ВЗ ГО виплати',
+    defaultValue: 5,
+    helperText: 'Окремий військовий збір 5% для виплат працівникам.',
   },
 ]
 
@@ -103,30 +138,35 @@ export const recipientDefinitions: RecipientDefinition[] = [
         label: '1 група',
         helperText: 'Фіксований ЄП, військовий збір та ЄСВ. Рекомендується виставити внутрішній percent-policy.',
         rateKeys: ['fopGroup1'],
+        militaryTax: { mode: 'fixed', rateKey: 'militaryFopGroup1' },
       },
       {
         id: 'fop-group-2',
         label: '2 група',
         helperText: 'Фіксовані платежі. Значення в налаштуваннях працює як внутрішня надбавка.',
         rateKeys: ['fopGroup2'],
+        militaryTax: { mode: 'fixed', rateKey: 'militaryFopGroup2' },
       },
       {
         id: 'fop-group-3-five',
         label: '3 група: 5% від доходу',
         helperText: 'Класична модель єдиного податку 5% без ПДВ.',
         rateKeys: ['fopGroup3Five'],
+        militaryTax: { mode: 'percent', rateKey: 'militaryFopGroup3' },
       },
       {
         id: 'fop-group-3-three-vat',
         label: '3 група: 3% + ПДВ',
         helperText: 'Сума ставки формується як 3% плюс компонент ПДВ.',
         rateKeys: ['fopGroup3Three', 'vat'],
+        militaryTax: { mode: 'percent', rateKey: 'militaryFopGroup3' },
       },
       {
         id: 'fop-general',
         label: 'Загальна система',
         helperText: 'Робочий шаблон для ПДФО, військового збору та ЄСВ.',
         rateKeys: ['fopGeneral'],
+        militaryTax: { mode: 'percent', rateKey: 'militaryFopGeneral' },
       },
     ],
   },
@@ -177,6 +217,7 @@ export const recipientDefinitions: RecipientDefinition[] = [
         label: 'Виплати працівникам',
         helperText: 'Спрощена робоча модель для ПДФО, військового збору та ЄСВ.',
         rateKeys: ['ngoPayroll'],
+        militaryTax: { mode: 'percent', rateKey: 'militaryNgoPayroll' },
       },
     ],
   },

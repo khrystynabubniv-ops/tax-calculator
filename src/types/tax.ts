@@ -6,12 +6,19 @@ export type RateKey =
   | 'fopGroup3Five'
   | 'fopGroup3Three'
   | 'fopGeneral'
+  | 'militaryFopGroup1'
+  | 'militaryFopGroup2'
+  | 'militaryFopGroup3'
+  | 'militaryFopGeneral'
   | 'tovSimplifiedFive'
   | 'tovSimplifiedThree'
   | 'tovGeneral'
   | 'vat'
   | 'ngoNonProfit'
   | 'ngoPayroll'
+  | 'militaryNgoPayroll'
+
+export type RateValueType = 'percent' | 'currency'
 
 export interface RateDefinition {
   key: RateKey
@@ -19,6 +26,12 @@ export interface RateDefinition {
   shortLabel: string
   defaultValue: number
   helperText: string
+  valueType?: RateValueType
+}
+
+export interface MilitaryTaxDefinition {
+  mode: 'none' | 'percent' | 'fixed'
+  rateKey?: RateKey
 }
 
 export interface ScenarioDefinition {
@@ -26,6 +39,7 @@ export interface ScenarioDefinition {
   label: string
   helperText: string
   rateKeys: RateKey[]
+  militaryTax?: MilitaryTaxDefinition
 }
 
 export interface RecipientDefinition {

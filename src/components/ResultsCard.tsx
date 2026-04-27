@@ -1,4 +1,7 @@
 interface ResultsCardProps {
+  baseTaxLabel: string
+  militaryTaxLabel: string
+  militaryTaxDescription: string
   surchargeLabel: string
   totalLabel: string
   formulaLabel: string
@@ -7,6 +10,9 @@ interface ResultsCardProps {
 }
 
 export function ResultsCard({
+  baseTaxLabel,
+  militaryTaxLabel,
+  militaryTaxDescription,
   surchargeLabel,
   totalLabel,
   formulaLabel,
@@ -33,12 +39,26 @@ export function ResultsCard({
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-          <p className="text-sm text-slate-300">Сума податку / надбавки</p>
+          <p className="text-sm text-slate-300">Загальна сума податків</p>
           <p className="mt-3 text-3xl font-semibold text-white">{surchargeLabel}</p>
         </div>
         <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-5">
           <p className="text-sm text-emerald-100">Фінальна сума до виставлення</p>
           <p className="mt-3 text-3xl font-semibold text-white">{totalLabel}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-3xl border border-white/10 bg-white/5 p-5">
+        <p className="text-sm font-medium text-slate-200">Податки</p>
+        <div className="mt-4 space-y-3 text-sm text-slate-300">
+          <div className="flex items-center justify-between gap-4">
+            <span>Базові податки</span>
+            <span className="font-medium text-white">{baseTaxLabel}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span>{militaryTaxDescription}</span>
+            <span className="font-medium text-white">{militaryTaxLabel}</span>
+          </div>
         </div>
       </div>
 
