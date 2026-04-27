@@ -9,20 +9,7 @@ interface SettingsPanelProps {
 export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
   return (
     <section className="rounded-[28px] border border-white/60 bg-white/85 p-5 shadow-[0_24px_80px_rgba(11,31,38,0.10)] backdrop-blur md:p-7">
-      <div className="max-w-3xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">
-          Налаштування ставок
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-slate-900 md:text-3xl">
-          Дефолтні ставки зберігаються локально
-        </h2>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
-          Усі значення нижче зберігаються в <code className="rounded bg-slate-100 px-1.5 py-0.5 text-sm">localStorage</code>.
-          Для ФОП 1 та 2 групи з фіксованими платежами рекомендується ставити внутрішню робочу надбавку, а не буквальну податкову формулу.
-        </p>
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         {rateDefinitions.map((definition) => (
           <label
             key={definition.key}

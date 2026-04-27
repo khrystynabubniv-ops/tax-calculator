@@ -111,28 +111,15 @@ function App() {
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.18),_transparent_28%),linear-gradient(135deg,_#f7f4eb_0%,_#eef9f4_46%,_#fef7e8_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-10 lg:py-10">
       <div className="mx-auto max-w-7xl">
         <section className="mb-6 overflow-hidden rounded-[32px] border border-white/60 bg-white/72 p-6 shadow-[0_28px_90px_rgba(17,24,39,0.08)] backdrop-blur md:p-8">
-          <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
+          <div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700">
-                Internal Tool
-              </p>
-              <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight text-slate-950 md:text-6xl">
+              <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-slate-950 md:text-6xl">
                 Податковий калькулятор для швидкого виставлення рахунків
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
                 Введіть суму, оберіть форму отримувача та систему оподаткування, а калькулятор
                 автоматично підтягне базову ставку, порахує надбавку і покаже фінальну суму в
                 гривні.
-              </p>
-            </div>
-
-            <div className="rounded-[28px] border border-emerald-200/70 bg-emerald-50/80 p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-800">
-                Важливо
-              </p>
-              <p className="mt-3 text-sm leading-6 text-emerald-950">
-                Калькулятор не є податковою консультацією. Ставки потрібно підтверджувати з
-                бухгалтером або юристом.
               </p>
             </div>
           </div>
