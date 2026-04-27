@@ -32,20 +32,20 @@ export function CalculatorForm({
   isManualRate,
 }: CalculatorFormProps) {
   return (
-    <section className="rounded-[30px] border border-white/10 bg-[#121212] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)] md:p-7">
+    <section className="rounded-[28px] border border-white/60 bg-white/85 p-5 shadow-[0_24px_80px_rgba(11,31,38,0.10)] backdrop-blur md:p-7">
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d6ff4a]">
-            Calculator
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+            Калькулятор
           </p>
-          <h2 className="mt-2 font-['Space_Grotesk'] text-2xl font-semibold text-white md:text-3xl">
+          <h2 className="mt-2 text-2xl font-semibold text-slate-900 md:text-3xl">
             Порахувати суму до виставлення
           </h2>
         </div>
         <button
           type="button"
           onClick={onReset}
-          className="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-stone-300 transition hover:border-white/20 hover:bg-white/8 hover:text-white"
+          className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
         >
           Скинути
         </button>
@@ -53,27 +53,27 @@ export function CalculatorForm({
 
       <div className="grid gap-5 md:grid-cols-2">
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-stone-200">Сума без податків</span>
+          <span className="mb-2 block text-sm font-medium text-slate-800">Сума без податків</span>
           <div className="relative">
             <input
               inputMode="decimal"
               value={amount}
               onChange={(event) => onAmountChange(event.target.value)}
               placeholder="Наприклад, 10000"
-              className="w-full rounded-[22px] border border-white/10 bg-[#1a1a1a] px-4 py-3 pr-16 text-base text-white outline-none transition placeholder:text-stone-500 focus:border-[#d6ff4a] focus:ring-4 focus:ring-[#d6ff4a]/15"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-16 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
             />
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-stone-500">
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">
               грн
             </span>
           </div>
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-stone-200">Тип отримувача</span>
+          <span className="mb-2 block text-sm font-medium text-slate-800">Тип отримувача</span>
           <select
             value={recipientType}
             onChange={(event) => onRecipientTypeChange(event.target.value as RecipientType)}
-            className="w-full rounded-[22px] border border-white/10 bg-[#1a1a1a] px-4 py-3 text-base text-white outline-none transition focus:border-[#d6ff4a] focus:ring-4 focus:ring-[#d6ff4a]/15"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
           >
             {recipientOptions.map((recipient) => (
               <option key={recipient.id} value={recipient.id}>
@@ -85,11 +85,11 @@ export function CalculatorForm({
       </div>
 
       <label className="mt-5 block">
-        <span className="mb-2 block text-sm font-medium text-stone-200">Група / система оподаткування</span>
+        <span className="mb-2 block text-sm font-medium text-slate-800">Група / система оподаткування</span>
         <select
           value={selectedScenario.id}
           onChange={(event) => onScenarioChange(event.target.value)}
-          className="w-full rounded-[22px] border border-white/10 bg-[#1a1a1a] px-4 py-3 text-base text-white outline-none transition focus:border-[#d6ff4a] focus:ring-4 focus:ring-[#d6ff4a]/15"
+          className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
         >
           {selectedRecipient.scenarios.map((scenario) => (
             <option key={scenario.id} value={scenario.id}>
@@ -97,17 +97,17 @@ export function CalculatorForm({
             </option>
           ))}
         </select>
-        <p className="mt-2 text-sm leading-6 text-stone-400">{selectedScenario.helperText}</p>
+        <p className="mt-2 text-sm leading-6 text-slate-500">{selectedScenario.helperText}</p>
       </label>
 
       <label className="mt-5 block">
         <div className="mb-2 flex items-center justify-between gap-4">
-          <span className="block text-sm font-medium text-stone-200">Податковий відсоток</span>
+          <span className="block text-sm font-medium text-slate-800">Податковий відсоток</span>
           {isManualRate ? (
             <button
               type="button"
               onClick={onRestoreAutoRate}
-              className="text-sm font-medium text-[#d6ff4a] transition hover:text-[#efffbb]"
+              className="text-sm font-medium text-emerald-700 transition hover:text-emerald-900"
             >
               Повернути автоставку
             </button>
@@ -118,13 +118,13 @@ export function CalculatorForm({
             inputMode="decimal"
             value={rateValue}
             onChange={(event) => onRateChange(event.target.value)}
-            className="w-full rounded-[22px] border border-white/10 bg-[#1a1a1a] px-4 py-3 pr-12 text-base text-white outline-none transition focus:border-[#d6ff4a] focus:ring-4 focus:ring-[#d6ff4a]/15"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-base text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
           />
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-stone-500">
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">
             %
           </span>
         </div>
-        <p className="mt-2 text-sm leading-6 text-stone-400">
+        <p className="mt-2 text-sm leading-6 text-slate-500">
           Ставка підтягується автоматично з налаштувань, але її можна відредагувати вручну для конкретного розрахунку.
         </p>
       </label>
